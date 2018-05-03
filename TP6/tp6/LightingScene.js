@@ -32,10 +32,15 @@ class LightingScene extends CGFscene
 		this.enableTextures(true);
 
 		// Scene elements
-		this.car = new MyVehicle(this);
+		
+		this.car=new MyCar(this);
 
 		// Materials
 		this.materialDefault = new CGFappearance(this);
+
+
+		// Textures
+		this.setUpdatePeriod(100);
 	};
 
 	initCameras()
@@ -101,7 +106,7 @@ class LightingScene extends CGFscene
 	updateLights()
 	{
 		for (var i = 0; i < this.lights.length; i++)
-		this.lights[i].update();
+			this.lights[i].update();
 	}
 
 
@@ -132,10 +137,12 @@ class LightingScene extends CGFscene
 
 		// ---- BEGIN Scene drawing section
 
-		this.pushMatrix();
 		this.car.display();
-		this.popMatrix();
 
 		// ---- END Scene drawing section
 	};
+
+	update(currTime)
+	{
+	}
 };
