@@ -35,6 +35,11 @@ class LightingScene extends CGFscene
 		
 		this.car=new MyCar(this);
 
+		//GUI
+		this.option1=true;
+		this.option2=false;
+		this.speed=3;
+		
 		// Materials
 		this.materialDefault = new CGFappearance(this);
 
@@ -145,4 +150,9 @@ class LightingScene extends CGFscene
 	update(currTime)
 	{
 	}
+	
+	doSomething()
+	{ 
+	console.log("Doing something...");
+	};
 };
