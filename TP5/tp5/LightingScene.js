@@ -41,8 +41,8 @@ class LightingScene extends CGFscene
 		this.boardB = new Plane(this, BOARD_B_DIVISIONS);
 
 		this.cylinder = new MyCylinder(this, 8, 20);
-
-		this.clock = new MyClock(this);
+		
+		this.clock=new MyClock(this);
 
 		// Materials
 		this.materialDefault = new CGFappearance(this);
@@ -98,6 +98,8 @@ class LightingScene extends CGFscene
 		this.cylinderAppearance.setDiffuse(1, 1, 1, 1);
 		this.cylinderAppearance.setShininess(30);
 		this.cylinderAppearance.loadTexture("../resources/images/table.png");
+		this.time=12645;
+		this.setUpdatePeriod(20);
 	};
 
 	initCameras()
@@ -163,7 +165,7 @@ class LightingScene extends CGFscene
 	updateLights()
 	{
 		for (var i = 0; i < this.lights.length; i++)
-		this.lights[i].update();
+			this.lights[i].update();
 	}
 
 
@@ -196,73 +198,83 @@ class LightingScene extends CGFscene
 
 		// Floor
 		this.pushMatrix();
-		this.translate(7.5, 0, 7.5);
-		this.rotate(-90 * degToRad, 1, 0, 0);
-		this.scale(15, 15, 0.2);
-		this.floorAppearance.apply();
-		this.floor.display();
+			this.translate(7.5, 0, 7.5);
+			this.rotate(-90 * degToRad, 1, 0, 0);
+			this.scale(15, 15, 0.2);
+			this.floorAppearance.apply();
+			this.floor.display();
 		this.popMatrix();
 
 
 		// Left Wall
 		this.pushMatrix();
-		this.translate(0, 4, 7.5);
-		this.rotate(90 * degToRad, 0, 1, 0);
-		this.scale(15, 8, 0.2);
-		this.windowAppearance.apply();
-		this.wall_Left.display();
+			this.translate(0, 4, 7.5);
+			this.rotate(90 * degToRad, 0, 1, 0);
+			this.scale(15, 8, 0.2);
+			this.windowAppearance.apply();
+			this.wall_Left.display();
 		this.popMatrix();
 
 		// Plane Wall
 		this.pushMatrix();
-		this.translate(7.5, 4, 0);
-		this.scale(15, 8, 0.2);
-		this.materialWall.apply();
-		this.wall_Right.display();
+			this.translate(7.5, 4, 0);
+			this.scale(15, 8, 0.2);
+			this.materialWall.apply();
+			this.wall_Right.display();
 		this.popMatrix();
 
 		// First Table
 		this.pushMatrix();
-		this.translate(5, 0, 8);
-		this.table.display();
+			this.translate(5, 0, 8);
+			this.table.display();
 		this.popMatrix();
 
 		// Second Table
 		this.pushMatrix();
-		this.translate(12, 0, 8);
-		this.table.display();
+			this.translate(12, 0, 8);
+			this.table.display();
 		this.popMatrix();
 
 		// Board A
 		this.pushMatrix();
-		this.translate(4, 4.5, 0.2);
-		this.scale(BOARD_WIDTH, BOARD_HEIGHT, 1);
-		this.slidesAppearance.apply();
-		this.boardA.display();
+			this.translate(4, 4.5, 0.2);
+			this.scale(BOARD_WIDTH, BOARD_HEIGHT, 1);
+			this.slidesAppearance.apply();
+			this.boardA.display();
 		this.popMatrix();
 
 		// Board B
 		this.pushMatrix();
-		this.translate(10.5, 4.5, 0.2);
-		this.scale(BOARD_WIDTH, BOARD_HEIGHT, 1);
-		this.boardAppearance.apply();
-		this.boardB.display();
+			this.translate(10.5, 4.5, 0.2);
+			this.scale(BOARD_WIDTH, BOARD_HEIGHT, 1);
+			this.boardAppearance.apply();
+			this.boardB.display();
 		this.popMatrix();
 
 		this.pushMatrix();
-		this.translate(14, 0, 14);
-		this.rotate(-90 * degToRad, 1, 0, 0);
-		this.scale(1, 1, 10);
-		this.cylinderAppearance.apply();
-		this.cylinder.display();
+			this.translate(14, 0, 14);
+			this.rotate(-90 * degToRad, 1, 0, 0);
+			this.scale(1, 1, 10);
+			this.cylinderAppearance.apply();
+			this.cylinder.display();
 		this.popMatrix();
-
+		
 		this.pushMatrix();
-		this.translate(7.25, 7.25, 0);
-		this.scale(0.7, 0.7, 1);
-		this.clock.display();
+			this.translate(7.25, 7.25, 0);
+			this.scale(0.7,0.7,1);
+			this.clock.display();
 		this.popMatrix();
 
 		// ---- END Scene drawing section
 	};
+
+	update(currTime)
+	{
+		this.lastone=this.lastone||currTime;
+		this.dTime=(currTime-this.lastone)/1000;
+		this.time=this.time+this.dTime;
+		this.lastone=currTime;
+		this.clock.update(this.time);
+		
+	}
 };
