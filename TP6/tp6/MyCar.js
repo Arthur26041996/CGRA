@@ -8,14 +8,14 @@ class MyCar extends CGFobject
 	{
 		super(scene);
 		this.quad = new MyUnitCubeQuad(this.scene);
-        this.semisphere = new MyLamp(this.scene, 20, 20);
+        this.semisphere = new MyLamp(this.scene, 12, 2);
 		this.wheel=new MyWheel(this.scene);
 	};
 
 	display() 
 	{
 		// Body
-        this.scene.pushMatrix();
+        /*this.scene.pushMatrix();
         this.scene.rotate(90 * degToRad, 1, 0, 0);
         this.scene.translate(0, 0, -0.3);
         this.scene.scale(2.5, 5, 0.6);
@@ -95,12 +95,12 @@ class MyCar extends CGFobject
 	 	this.scene.translate(-1.3,0,1.0);
 		this.scene.scale(0.45,0.45,0.5);
 		this.wheel.display();
-		this.scene.popMatrix();
+		this.scene.popMatrix();*/
 
 		this.scene.pushMatrix();
-	 	this.scene.rotate(-90*Math.PI/180,0,1,0);
+	 	/*this.scene.rotate(-90*Math.PI/180,0,1,0);
 	 	this.scene.translate(1.3,0,1.0);
-		this.scene.scale(0.45,0.45,0.5);
+		this.scene.scale(0.45,0.45,0.5);*/
 		this.wheel.display();
 		this.scene.popMatrix();
 	};

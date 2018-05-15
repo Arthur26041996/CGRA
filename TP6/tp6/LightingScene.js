@@ -36,8 +36,8 @@ class LightingScene extends CGFscene
 		this.car=new MyCar(this);
 
 		//GUI
-		this.option1=true;
-		this.option2=false;
+		this.farolF=true;
+		this.farolT=false;
 		this.speed=3;
 		
 		// Materials
