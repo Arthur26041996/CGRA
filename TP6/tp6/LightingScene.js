@@ -21,7 +21,7 @@ class LightingScene extends CGFscene
 
 		this.initLights();
 
-		this.gl.clearColor(0.0, 0.0, 0.0, 1.0);
+		this.gl.clearColor(0.12, 0.56, 1.0, 1.0);
 		this.gl.clearDepth(100.0);
 		this.gl.enable(this.gl.DEPTH_TEST);
 		this.gl.enable(this.gl.CULL_FACE);
@@ -32,14 +32,14 @@ class LightingScene extends CGFscene
 		this.enableTextures(true);
 
 		// Scene elements
-		
-		this.car=new MyCar(this);
+		this.car = new MyCar(this);
+		this.terrain = new MyTerrain(this, 50, 0, 50, 0, 50);
 
 		//GUI
 		this.farolF=true;
 		this.farolT=false;
 		this.speed=3;
-		
+
 		// Materials
 		this.materialDefault = new CGFappearance(this);
 
@@ -143,6 +143,7 @@ class LightingScene extends CGFscene
 		// ---- BEGIN Scene drawing section
 
 		this.car.display();
+		this.terrain.display();
 
 		// ---- END Scene drawing section
 	};
@@ -150,9 +151,9 @@ class LightingScene extends CGFscene
 	update(currTime)
 	{
 	}
-	
+
 	doSomething()
-	{ 
+	{
 	console.log("Doing something...");
 	};
 };

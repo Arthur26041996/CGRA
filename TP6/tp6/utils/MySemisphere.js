@@ -1,8 +1,8 @@
 /**
-* MyLamp
+* MySemisphere
 * @constructor
 */
-class MyLamp extends CGFobject
+class MySemisphere extends CGFobject
 {
 	constructor(scene, slices, stacks)
 	{
@@ -32,17 +32,6 @@ class MyLamp extends CGFobject
 			}
 		}
 
-
-		/*
-		for (i = 0; i <= this.stacks; i++) {
-			for (j = 0; j < this.slices; j++) {
-				c = i/this.stacks;
-				r = Math.sqrt(1 - c^2);
-
-				this.vertices.push(r * Math.cos(j * this.alpha), r * Math.sin(j * this.alpha), c);
-			}
-		}
-*/
 		this.indices = [];
 		for(i = 1; i <= this.slices; i++){
 			this.indices.push(0, (i%this.slices)+1, i);
@@ -64,13 +53,6 @@ class MyLamp extends CGFobject
 		}
 
 
-		// for (i = 0; i < this.stacks; i++) {
-		// 	for (j = 0; j < this.slices; j++) {
-		// 		this.indices.push(j+(i+1)*this.slices, j+i*this.slices, (j+1)%this.slices+(i+1)*this.slices);
-		// 		this.indices.push((j+1)%this.slices+(i+1)*this.slices, j+i*this.slices, (j+1)%this.slices+i*this.slices);
-		// 	}
-		// }
-
 		this.normals = [];
 		this.normals.push(0,0,-1);
 		for (i=1; i <= this.stacks; i++) {
@@ -78,7 +60,7 @@ class MyLamp extends CGFobject
 				this.normals.push(
 					Math.sin(i*this.beta) * Math.cos(j*this.alpha),
 					Math.sin(i*this.beta) * Math.sin(j*this.alpha),
-					1-Math.cos(i*this.beta)
+					-Math.cos(i*this.beta)
 				);
 			}
 		}
