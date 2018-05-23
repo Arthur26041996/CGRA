@@ -27,8 +27,11 @@ class MyInterface extends CGFinterface {
 		var luz=this.gui.addFolder("Luzes");
 		luz.open();
 
-		luz.add(this.scene, 'farolF');
-		luz.add(this.scene, 'farolT');
+		luz.add(this.scene, 'light0');
+		luz.add(this.scene, 'light1');
+		luz.add(this.scene, 'light2');
+		luz.add(this.scene, 'light3');
+		luz.add(this.scene, 'light4');
 
 		// add a slider
 		// must be a numeric variable of the scene, initialized in scene.init e.g.
@@ -36,26 +39,29 @@ class MyInterface extends CGFinterface {
 		// min and max values can be specified as parameters
 
 		this.gui.add(this.scene, 'speed', -5, 5);
+		this.gui.add(this.scene,'axix');
+		//call initKeys
+		this.initKeys();
 
 		return true;
 	};
 
-	/**
-	 * processKeyboard
-	 * @param event {Event}
-	 */
-	processKeyboard(event) {
-		// call CGFinterface default code (omit if you want to override)
-		super.processKeyboard(event);
-
-		// Check key codes e.g. here: http://www.asciitable.com/
-		// or use String.fromCharCode(event.keyCode) to compare chars
-
-		// for better cross-browser support, you may also check suggestions on using event.which in http://www.w3schools.com/jsref/event_key_keycode.asp
-		switch (event.keyCode)
-		{
-			case (65):	// only works for capital 'A', as it is
-				console.log("Key 'A' pressed");
-		};
+	initKeys() {
+		this.scene.gui=this;
+		this.processKeyboard=function(){};
+		this.activeKeys={};
 	};
+
+	processKeyDown(event) {
+		this.activeKeys[event.code]=true;
+	};
+
+	processKeyUp(event) {
+		this.activeKeys[event.code]=false;
+	};
+
+	isKeyPressed(keyCode) {
+		return this.activeKeys[keyCode] || false;
+	};
+
 };

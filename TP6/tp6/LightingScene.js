@@ -36,9 +36,13 @@ class LightingScene extends CGFscene
 		this.terrain = new MyTerrain(this, 50, 0, 50, 0, 50);
 
 		//GUI
-		this.farolF=true;
-		this.farolT=false;
+		this.light0=true;
+		this.light1=false;
+		this.light2=true;
+		this.light3=false;
+		this.light4=true;
 		this.speed=3;
+		this.axix=true;
 
 		// Materials
 		this.materialDefault = new CGFappearance(this);
@@ -142,15 +146,79 @@ class LightingScene extends CGFscene
 
 		// ---- BEGIN Scene drawing section
 
+		this.pushMatrix();
+		this.translate(0,0,0.1*this.x);
 		this.car.display();
+		this.popMatrix();
 		this.terrain.display();
 
 		// ---- END Scene drawing section
-	};
+	};	
 
 	update(currTime)
 	{
-	}
+		this.checkKeys();
+		this.checkLights();
+	};
+	
+	checkKeys()
+	{
+		var text="Keys pressed: ";
+		var keysPressed=false;
+		if (this.gui.isKeyPressed("KeyW"))
+		{
+			text+=" W ";
+			this.x+=this.speed;
+			keysPressed=true;
+		}
+		if (this.gui.isKeyPressed("KeyS"))
+		{
+			text+=" S ";
+			this.x-=this.speed;
+			keysPressed=true;
+		}
+		if (this.gui.isKeyPressed("KeyD"))
+		{
+			text+=" D ";
+			this.y++;
+			keysPressed=true;
+		}
+		if (this.gui.isKeyPressed("KeyA"))
+		{
+			text+=" A ";
+			this.y--;
+			keysPressed=true;
+		}
+		if (keysPressed)
+			console.log(text);
+	};
+	
+	checkLights(){
+		if(!this.light0)
+			this.lights[0].disable();
+		else
+			this.lights[0].enable();
+
+		if(!this.light1)
+			this.lights[1].disable();
+		else
+			this.lights[1].enable();
+		
+		if(!this.light2)
+			this.lights[2].disable();
+		else
+			this.lights[2].enable();
+		
+		if(!this.light3)
+			this.lights[3].disable();
+		else
+			this.lights[3].enable();
+		
+		if(!this.light4)
+			this.lights[4].disable();
+		else
+			this.lights[4].enable();	
+	};
 
 	doSomething()
 	{
