@@ -7,6 +7,13 @@ class MyCar extends CGFobject
 	constructor(scene)
 	{
 		super(scene);
+		//variables to move the wheels
+		this.max_rot=Math.PI/4;
+		this.curr_rot1=0;	//variable to rotate front or back
+		this.curr_rot=0;	//variable to rotate right or left
+		this.mov=0;
+		//variable radius
+		this.r=0.6;
 		this.cube = new MyUnitCubeQuad(this.scene);
 		this.trapeze = new MyTrapeze2D(this.scene);
 		this.trapeze3D = new MyTrapeze3D(this.scene);
@@ -41,9 +48,10 @@ class MyCar extends CGFobject
 
 	display()
 	{
+		this.scene.pushMatrix();
+		this.scene.translate(0,0,1*this.mov);//tanslation of the car
 		// Body
 		this.paint.apply();
-
         this.scene.pushMatrix();
         this.scene.translate(0, 1.1, 0);
 		this.scene.scale(2.5, 1, 5);
@@ -190,32 +198,94 @@ class MyCar extends CGFobject
 		this.default.apply();
 
 		//Wheels
-		this.scene.pushMatrix();
-	 	this.scene.rotate(90*Math.PI/180,0,1,0);
-	 	this.scene.translate(-1.3, 0.6, 1.0);
-		this.scene.scale(0.6,0.6,0.5);
-		this.wheel.display();
-		this.scene.popMatrix();
-
+		//back left
 		this.scene.pushMatrix();
 	 	this.scene.rotate(90*Math.PI/180,0,1,0);
 	 	this.scene.translate(1.3, 0.6, 1.0);
-		this.scene.scale(0.6,0.6,0.5);
+		this.scene.scale(this.r,this.r,0.5);
+		this.scene.rotate(-this.curr_rot1,0,0,1);
 		this.wheel.display();
 		this.scene.popMatrix();
-
+		//back rigth
 		this.scene.pushMatrix();
 	 	this.scene.rotate(-90*Math.PI/180,0,1,0);
 	 	this.scene.translate(-1.3, 0.6, 1.0);
-		this.scene.scale(0.6,0.6,0.5);
+		this.scene.scale(this.r,this.r,0.5);
+		this.scene.rotate(this.curr_rot1,0,0,1);
 		this.wheel.display();
 		this.scene.popMatrix();
-
+		//front left
+		this.scene.pushMatrix();
+	 	this.scene.rotate(90*Math.PI/180,0,1,0);
+	 	this.scene.translate(-1.3, 0.6, 1.0);
+		this.scene.scale(this.r,this.r,0.5);
+		this.scene.rotate(this.curr_rot,0,1,0);
+		this.scene.rotate(-this.curr_rot1,0,0,1);
+		this.wheel.display();
+		this.scene.popMatrix();
+		//front rigth
 		this.scene.pushMatrix();
 	 	this.scene.rotate(-90*Math.PI/180,0,1,0);
 	 	this.scene.translate(1.3, 0.6, 1.0);
-		this.scene.scale(0.6,0.6,0.5);
+		this.scene.scale(this.r,this.r,0.5);
+		this.scene.rotate(this.curr_rot,0,1,0);
+		this.scene.rotate(this.curr_rot1,0,0,1);
 		this.wheel.display();
 		this.scene.popMatrix();
+
+		
+		this.scene.popMatrix();
+	};
+	update(time,rot,dir,speed){
+		//translate the car
+		this.moveCar(time,dir,speed);
+		//rotate to the right or left
+		this.rotateWheel(time,rot);
+		//rotate backwards or frontwards
+		this.rotWheel(time,dir,speed/this.r);
+	};
+
+	moveCar(time,dir,speed){
+		if(dir<0)
+			this.mov-=(speed*time);
+		if(dir>0)
+			this.mov+=(speed*time);
+	};
+
+	////rotate backwards or frontwards, speed parameter is in radians per second
+	rotWheel(time,dir,speed){
+		if(dir<0){
+				this.curr_rot1+=(time*speed);
+		}	
+		if(dir>0){
+				this.curr_rot1-=(time*speed);
+		}	
+	};
+
+	rotateWheel(time,rot){
+		if(rot<0){
+			if(Math.abs(this.curr_rot)<this.max_rot || this.curr_rot<0)
+				this.curr_rot+=(time*Math.PI/8);
+		}	
+		if(rot>0){
+			if(Math.abs(this.curr_rot)<this.max_rot || this.curr_rot>0)
+				this.curr_rot-=(time*Math.PI/8);
+		}
+		if(rot==0){
+			if(this.curr_rot>0){
+				this.curr_rot-=(time*Math.PI/8);
+				if(this.curr_rot<0)
+				this.curr_rot=0;
+				console.log("Voltando ao 0 pos");
+			}else
+				if(this.curr_rot<0){
+					console.log(this.curr_rot);
+					this.curr_rot+=(time*Math.PI/8);
+				if(this.curr_rot>0)
+				this.curr_rot=0;
+
+
+				}
+		}
 	};
 };

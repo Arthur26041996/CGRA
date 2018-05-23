@@ -33,7 +33,11 @@ class LightingScene extends CGFscene
 
 		// Scene elements
 		this.car = new MyCar(this);
-		this.terrain = new MyTerrain(this, 50, 0, 50, 0, 50);
+		this.terrain = new MyTerrain(this, 8);
+
+		//Vars to move the car
+		this.rot=0;
+		this.dir=0;
 
 		//GUI
 		this.light0=true;
@@ -49,7 +53,7 @@ class LightingScene extends CGFscene
 
 
 		// Textures
-		this.setUpdatePeriod(100);
+		this.setUpdatePeriod(10);
 	};
 
 	initCameras()
@@ -138,7 +142,9 @@ class LightingScene extends CGFscene
 		this.updateLights();
 
 		// Draw axis
-		this.axis.display();
+		if(this.axix){
+			this.axis.display();
+		}
 
 		this.materialDefault.apply();
 
@@ -147,46 +153,59 @@ class LightingScene extends CGFscene
 		// ---- BEGIN Scene drawing section
 
 		this.pushMatrix();
-		this.translate(0,0,0.1*this.x);
+		this.translate(8,0,0);
 		this.car.display();
 		this.popMatrix();
+		this.pushMatrix();
+		this.scale(20,2,20);
 		this.terrain.display();
+		this.popMatrix();
 
 		// ---- END Scene drawing section
 	};	
 
 	update(currTime)
 	{
-		this.checkKeys();
+		this.rot=0;
+		this.dir=0;
+		this.lastTime=this.lastTime||currTime;
+		this.delta=(currTime-this.lastTime)/1000;
+		this.lastTime=currTime;
+		this.checkKeys(this.delta);
 		this.checkLights();
+		this.car.update(this.delta,this.rot,this.dir,this.speed);
 	};
 	
-	checkKeys()
+	checkKeys(time)
 	{
 		var text="Keys pressed: ";
 		var keysPressed=false;
 		if (this.gui.isKeyPressed("KeyW"))
 		{
 			text+=" W ";
-			this.x+=this.speed;
+			this.x+=(this.speed*time);
+			this.dir=1;
 			keysPressed=true;
 		}
 		if (this.gui.isKeyPressed("KeyS"))
 		{
 			text+=" S ";
-			this.x-=this.speed;
+			this.x-=(this.speed*time);
+			if(this.dir==1)
+				this.dir=0;
+			else this.dir=-1;
 			keysPressed=true;
 		}
 		if (this.gui.isKeyPressed("KeyD"))
 		{
 			text+=" D ";
-			this.y++;
+			this.rot=1;
 			keysPressed=true;
 		}
 		if (this.gui.isKeyPressed("KeyA"))
 		{
 			text+=" A ";
-			this.y--;
+			this.rot=-1;
 			keysPressed=true;
 		}
 		if (keysPressed)
