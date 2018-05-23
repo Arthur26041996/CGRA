@@ -2,15 +2,29 @@
 /** Represents a plane with nrDivs divisions along both axis, with center at (0,0) */
 class Plane extends CGFobject{
 
-	constructor(scene, nrDivs, minS, maxS, minT, maxT)
+	constructor(scene, nrDivs, altimetry, minS, maxS, minT, maxT)
 	{
 		super(scene);
 
 		// nrDivs = 1 if not provided
-		nrDivs = typeof nrDivs !== 'undefined' ? nrDivs : 1;
+		nrDivs = typeof nrDivs !== 'undefined' ? nrDivs : 8;
+
+		// set altimetry if not provided
+		altimetry = altimetry || [
+									[ 2.0 , 3.0 , 2.0, 4.0, 2.5, 2.4, 2.3, 1.3, 0.0 ],
+									[ 2.0 , 3.0 , 2.0, 4.0, 7.5, 6.4, 4.3, 1.3, 0.0 ],
+									[ 0.0 , 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+									[ 0.0 , 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+									[ 0.0 , 0.0 , 2.0, 4.0, 2.5, 2.4, 0.0, 0.0, 0.0 ],
+									[ 0.0 , 0.0 , 2.0, 4.0, 3.5, 2.4, 0.0, 0.0, 0.0 ],
+									[ 0.0 , 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+									[ 0.0 , 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+									[ 2.0 , 3.0 , 2.0, 1.0, 2.5, 2.4, 2.3, 1.3, 0.0 ]
+								 ];
 
 		this.nrDivs = nrDivs;
 		this.patchLength = 1.0 / nrDivs;
+		this.altimetry = altimetry;
 
 		this.minS = minS || 0;
 		this.maxS = maxS || 1;
@@ -45,19 +59,19 @@ class Plane extends CGFobject{
 		// Uncomment below to init texCoords
 		this.texCoords = [];
 
-		var yCoord = 0.5;
+		var zCoord = -0.5;
 
 		for (var j = 0; j <= this.nrDivs; j++)
 		{
 			var xCoord = -0.5;
 			for (var i = 0; i <= this.nrDivs; i++)
 			{
-				this.vertices.push(xCoord, yCoord, 0);
+				this.vertices.push(xCoord, this.altimetry[j][i], zCoord);
 
 				// As this plane is being drawn on the xy plane, the normal to the plane will be along the positive z axis.
 				// So all the vertices will have the same normal, (0, 0, 1).
 
-				this.normals.push(0,0,1);
+				this.normals.push(0,1,0);
 
 				// texCoords should be computed here; uncomment and fill the blanks
 				// this.texCoords.push(i/this.nrDivs, j/this.nrDivs);
@@ -65,7 +79,7 @@ class Plane extends CGFobject{
 
 				xCoord += this.patchLength;
 			}
-			yCoord -= this.patchLength;
+			zCoord += this.patchLength;
 		}
 
 		// Generating indices
@@ -81,30 +95,30 @@ class Plane extends CGFobject{
 
 		this.indices = [];
 		var ind=0;
+        //
+        //
+		// for (var j = 0; j < this.nrDivs; j++)
+		// {
+		// 	for (var i = 0; i <= this.nrDivs; i++)
+		// 	{
+		// 		this.indices.push(ind);
+		// 		this.indices.push(ind+this.nrDivs+1);
+        //
+		// 		ind++;
+		// 	}
+		// 	if (j+1 < this.nrDivs)
+		// 	{
+		// 		// Extra vertices to create degenerate triangles so that the strip can wrap on the next row
+		// 		// degenerate triangles will not generate fragments
+		// 		this.indices.push(ind+this.nrDivs);
+		// 		this.indices.push(ind);
+		// 	}
+		// }
+        //
+		// this.primitiveType = this.scene.gl.TRIANGLE_STRIP;
 
+		/* Alternative with TRIANGLES instead of TRIANGLE_STRIP. More indices, but no degenerate triangles */
 
-		for (var j = 0; j < this.nrDivs; j++)
-		{
-			for (var i = 0; i <= this.nrDivs; i++)
-			{
-				this.indices.push(ind);
-				this.indices.push(ind+this.nrDivs+1);
-
-				ind++;
-			}
-			if (j+1 < this.nrDivs)
-			{
-				// Extra vertices to create degenerate triangles so that the strip can wrap on the next row
-				// degenerate triangles will not generate fragments
-				this.indices.push(ind+this.nrDivs);
-				this.indices.push(ind);
-			}
-		}
-
-		this.primitiveType = this.scene.gl.TRIANGLE_STRIP;
-
-	/* Alternative with TRIANGLES instead of TRIANGLE_STRIP. More indices, but no degenerate triangles */
-	/*
 		for (var j = 0; j < this.nrDivs; j++)
 		{
 			for (var i = 0; i < this.nrDivs; i++)
@@ -118,7 +132,7 @@ class Plane extends CGFobject{
 		}
 
 		this.primitiveType = this.scene.gl.TRIANGLES;
-	*/
+
 
 		this.initGLBuffers();
 	};
