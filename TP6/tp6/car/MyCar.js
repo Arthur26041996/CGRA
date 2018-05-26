@@ -9,11 +9,14 @@ class MyCar extends CGFobject
 		super(scene);
 		//variables to move the wheels
 		this.max_rot=Math.PI/4;
-		this.curr_rot1=0;	//variable to rotate front or back
+		this.curr_rot1=0;	//variable to rotate front and back
 		this.curr_rot=0;	//variable to rotate right or left
-		this.mov=0;
-		//variable radius
-		this.r=0.6;
+		this.mov=0;			//total to move
+		this.rot_car=0.0;	//rotation of the car
+		this.x=0;			//position in x
+		this.z=0;			//position in z
+		
+		this.r=0.6;			//variable radius
 		this.cube = new MyUnitCubeQuad(this.scene);
 		this.trapeze = new MyTrapeze2D(this.scene);
 		this.trapeze3D = new MyTrapeze3D(this.scene);
@@ -48,8 +51,14 @@ class MyCar extends CGFobject
 
 	display()
 	{
+		
+		
+		
 		this.scene.pushMatrix();
-		this.scene.translate(0,0,1*this.mov);//tanslation of the car
+		this.scene.translate(this.x,0,this.z);//tanslation of the car
+		this.scene.rotate(this.rot_car,0,1,0);
+		this.scene.translate(0,0,1.3);
+		
 		// Body
 		this.paint.apply();
         this.scene.pushMatrix();
@@ -233,7 +242,6 @@ class MyCar extends CGFobject
 		this.wheel.display();
 		this.scene.popMatrix();
 
-		
 		this.scene.popMatrix();
 	};
 	update(time,rot,dir,speed){
@@ -243,16 +251,37 @@ class MyCar extends CGFobject
 		this.rotateWheel(time,rot);
 		//rotate backwards or frontwards
 		this.rotWheel(time,dir,speed/this.r);
+		//rotate the all car
+		this.rotateCar(time,speed,dir);
 	};
+
+	rotateCar(time,speed,dir){
+		console.log("curr_rot " + this.curr_rot);
+		if(dir!=0){
+			if(dir>0){
+				this.rot_car+=this.curr_rot*time*2;
+			}
+			if(dir<0){
+				this.rot_car-=this.curr_rot*time*2;
+			}
+		}
+		
+	};
+
 
 	moveCar(time,dir,speed){
-		if(dir<0)
-			this.mov-=(speed*time);
+		if(dir<0){
+			this.x-=(speed*time)*Math.sin(this.rot_car);
+			this.z-=(speed*time)*Math.cos(this.rot_car);
+		}
 		if(dir>0)
-			this.mov+=(speed*time);
+		{
+			this.x+=(speed*time)*Math.sin(this.rot_car);
+			this.z+=(speed*time)*Math.cos(this.rot_car);
+		}
 	};
 
-	////rotate backwards or frontwards, speed parameter is in radians per second
+	//rotate backwards or frontwards, speed parameter is in radians per second
 	rotWheel(time,dir,speed){
 		if(dir<0){
 				this.curr_rot1+=(time*speed);
@@ -261,25 +290,34 @@ class MyCar extends CGFobject
 				this.curr_rot1-=(time*speed);
 		}	
 	};
-
+	//rotate wheel to the right or to the left
 	rotateWheel(time,rot){
-		if(rot<0){
-			if(Math.abs(this.curr_rot)<this.max_rot || this.curr_rot<0)
-				this.curr_rot+=(time*Math.PI/8);
+		if(rot<0){	//case: the user presses A
+			if(Math.abs(this.curr_rot)<this.max_rot || this.curr_rot<0){
+				if(this.curr_rot<0)	//case: the wheel is to the right side
+					this.curr_rot+=2*(time*Math.PI/8);	//to move the wheel faster
+				else
+					this.curr_rot+=(time*Math.PI/8);	//case: the wheel is to the left side
+			}
+			if(Math.abs(this.curr_rot)>this.max_rot)
+				this.curr_rot=this.max_rot;
 		}	
-		if(rot>0){
-			if(Math.abs(this.curr_rot)<this.max_rot || this.curr_rot>0)
-				this.curr_rot-=(time*Math.PI/8);
+		if(rot>0){	//case :the user presses D
+			if(Math.abs(this.curr_rot)<this.max_rot || this.curr_rot>0)	//not in the max angle
+				if(this.curr_rot>0)	//case: the wheel is to the left side
+					this.curr_rot-=2*(time*Math.PI/8);	//to move the wheel faster
+				else
+					this.curr_rot-=(time*Math.PI/8);	//case: the wheel is to the right side
+			if(Math.abs(this.curr_rot)>this.max_rot)
+				this.curr_rot=-this.max_rot;
 		}
-		if(rot==0){
+		if(rot==0){	//case: user releases the turning keys too get back to the frontal position
 			if(this.curr_rot>0){
 				this.curr_rot-=(time*Math.PI/8);
 				if(this.curr_rot<0)
 				this.curr_rot=0;
-				console.log("Voltando ao 0 pos");
 			}else
 				if(this.curr_rot<0){
-					console.log(this.curr_rot);
 					this.curr_rot+=(time*Math.PI/8);
 				if(this.curr_rot>0)
 				this.curr_rot=0;
@@ -288,4 +326,5 @@ class MyCar extends CGFobject
 				}
 		}
 	};
+	
 };
