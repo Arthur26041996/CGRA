@@ -31,9 +31,23 @@ class LightingScene extends CGFscene
 
 		this.enableTextures(true);
 
+		// Terrain altimetry
+		let altimetry = [
+							[ 2.0 , 3.0 , 2.0, 4.0, 2.5, 2.4, 2.3, 1.3, 0.0 ],
+							[ 2.0 , 3.0 , 2.0, 4.0, 0.5, 6.4, 4.3, 1.3, 0.0 ],
+							[ 0.0 , 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+							[ 0.0 , 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+							[ 0.0 , 0.0 , 0.0, 0.0, 2.5, 2.4, 0.0, 0.0, 0.0 ],
+							[ 0.0 , 0.0 , 0.0, 4.0, 2.0, 0.0, 0.0, 0.0, 0.0 ],
+							[ 0.0 , 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
+							[ 0.0 , 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 5.5, 6.0 ],
+							[ 6.0 , 4.0 , 3.0, 2.5, 3.0, 3.5, 3.0, 4.5, 5.5 ]
+						];
+
 		// Scene elements
 		this.car = new MyCar(this);
-		this.terrain = new MyTerrain(this, 8);
+		this.terrain = new MyTerrain(this, 8, altimetry, 0, 30, 0, 30);
+		this.crane = new MyCrane(this);
 
 		//Vars to move the car
 		this.rot=0;
@@ -153,16 +167,22 @@ class LightingScene extends CGFscene
 		// ---- BEGIN Scene drawing section
 
 		this.pushMatrix();
-		this.translate(8,0,0);
+		this.translate(-8, 0, 0);
+		this.crane.display();
+		this.popMatrix();
+
+		this.pushMatrix();
+		this.translate(20,0,0);
 		this.car.display();
 		this.popMatrix();
+
 		this.pushMatrix();
-		this.scale(20,2,20);
+		this.scale(50,2,50);
 		this.terrain.display();
 		this.popMatrix();
 
 		// ---- END Scene drawing section
-	};	
+	};
 
 	update(currTime)
 	{
@@ -175,7 +195,7 @@ class LightingScene extends CGFscene
 		this.checkLights();
 		this.car.update(this.delta,this.rot,this.dir,this.speed);
 	};
-	
+
 	checkKeys(time)
 	{
 		var text="Keys pressed: ";
@@ -211,8 +231,9 @@ class LightingScene extends CGFscene
 		if (keysPressed)
 			console.log(text);
 	};
-	
-	checkLights(){
+
+	checkLights()
+	{
 		if(!this.light0)
 			this.lights[0].disable();
 		else
@@ -222,25 +243,25 @@ class LightingScene extends CGFscene
 			this.lights[1].disable();
 		else
 			this.lights[1].enable();
-		
+
 		if(!this.light2)
 			this.lights[2].disable();
 		else
 			this.lights[2].enable();
-		
+
 		if(!this.light3)
 			this.lights[3].disable();
 		else
 			this.lights[3].enable();
-		
+
 		if(!this.light4)
 			this.lights[4].disable();
 		else
-			this.lights[4].enable();	
+			this.lights[4].enable();
 	};
 
 	doSomething()
 	{
-	console.log("Doing something...");
+		console.log("Doing something...");
 	};
 };

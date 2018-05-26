@@ -19,7 +19,7 @@ class Plane extends CGFobject{
 									[ 0.0 , 0.0 , 2.0, 4.0, 3.5, 2.4, 0.0, 0.0, 0.0 ],
 									[ 0.0 , 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
 									[ 0.0 , 0.0 , 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0 ],
-									[ 2.0 , 3.0 , 2.0, 1.0, 2.5, 2.4, 2.3, 1.3, 0.0 ]
+									[ 0.0 , 2.0 , 3.0, 2.5, 3.0, 0.0, 3.6, 2.0, 4.0 ]
 								 ];
 
 		this.nrDivs = nrDivs;
@@ -71,8 +71,6 @@ class Plane extends CGFobject{
 				// As this plane is being drawn on the xy plane, the normal to the plane will be along the positive z axis.
 				// So all the vertices will have the same normal, (0, 0, 1).
 
-				this.normals.push(0,1,0);
-
 				// texCoords should be computed here; uncomment and fill the blanks
 				// this.texCoords.push(i/this.nrDivs, j/this.nrDivs);
 				this.texCoords.push(this.minS + (i * (this.maxS - this.minS)/this.nrDivs), this.minT + (j * (this.maxT - this.minT)/this.nrDivs))
@@ -80,6 +78,46 @@ class Plane extends CGFobject{
 				xCoord += this.patchLength;
 			}
 			zCoord += this.patchLength;
+		}
+
+
+		function calcAngleDegrees(x, y) {
+			return Math.atan2(y, x) * 180 / Math.PI;
+		}
+
+		for (let i = 0; i < this.nrDivs; i++) {
+			for (let j = 0; j <= this.nrDivs; j++) {
+				if(j < this.nrDivs){
+					this.normals.push(
+										(this.altimetry[i][j+1] - this.altimetry[i][j]),
+										1,
+										(this.altimetry[i+1][j] - this.altimetry[i][j]),
+					);
+				}
+				else{
+					this.normals.push(
+										0,
+										1,
+										(this.altimetry[i+1][j] - this.altimetry[i][j]),
+					);
+				}
+			}
+		}
+		for (let j = 0; j <= this.nrDivs; j++) {
+			if(j < this.nrDivs){
+				this.normals.push(
+									(this.altimetry[this.nrDivs][j+1] - this.altimetry[this.nrDivs][j]),
+									1,
+									0
+				);
+			}
+			else{
+				this.normals.push(
+									0,
+									1,
+									0
+				);
+			}
 		}
 
 		// Generating indices
