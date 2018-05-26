@@ -226,7 +226,9 @@ class LightingScene extends CGFscene
 		if (this.gui.isKeyPressed("KeyA"))
 		{
 			text+=" A ";
-			this.rot=-1;
+			if(this.rot==1)
+				this.rot=0;
+			else this.rot=-1;
 			keysPressed=true;
 		}
 		if (keysPressed)
