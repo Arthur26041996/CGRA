@@ -194,6 +194,7 @@ class LightingScene extends CGFscene
 		this.checkKeys(this.delta);
 		this.checkLights();
 		this.car.update(this.delta,this.rot,this.dir,this.speed);
+		this.crane.update(this.delta, 3, 16);
 	};
 
 	checkKeys(time)
