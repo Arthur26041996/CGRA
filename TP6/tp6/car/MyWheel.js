@@ -16,14 +16,14 @@ class MyWheel extends CGFobject
 		this.wheelCirc.setSpecular(0.2, 0.2, 0.2, 1);
 		this.wheelCirc.setDiffuse(1, 1, 1, 1);
 		this.wheelCirc.setShininess(30);
-		this.wheelCirc.loadTexture("../resources/images/wheelCirc1.png");
+		this.wheelCirc.loadTexture("../resources/images/car/wheel/wheelCirc1.png");
 		this.wheelCirc.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
 
 		this.wheel = new CGFappearance(this.scene);
 		this.wheel.setSpecular(0.2, 0.2, 0.2, 1);
 		this.wheel.setDiffuse(1, 1, 1, 1);
 		this.wheel.setShininess(30);
-		this.wheel.loadTexture("../resources/images/Wheel.png");
+		this.wheel.loadTexture("../resources/images/car/wheel/tire.png");
 		this.wheel.setTextureWrap('CLAMP_TO_EDGE', 'CLAMP_TO_EDGE');
 
 		this.default = new CGFappearance(this.scene);

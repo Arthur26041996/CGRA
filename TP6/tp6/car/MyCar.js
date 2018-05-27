@@ -15,7 +15,7 @@ class MyCar extends CGFobject
 		this.rot_car=0.0;	//rotation of the car
 		this.x=0;			//position in x
 		this.z=0;			//position in z
-		
+
 		this.r=0.6;			//variable radius
 		this.cube = new MyUnitCubeQuad(this.scene);
 		this.trapeze = new MyTrapeze2D(this.scene);
@@ -35,7 +35,7 @@ class MyCar extends CGFobject
 		this.glass.loadTexture("../resources/images/glass.png");
 
 		this.paint = new CGFappearance(this.scene);
-		this.paint.loadTexture("../resources/images/carpaint.png");
+		this.paint.loadTexture("../resources/images/car/paint/black.png");
 
 		this.frontLights = new CGFappearance(this.scene);
 		this.frontLights.setDiffuse(1.0, 1.0, 0.0, 1.0);
@@ -46,19 +46,19 @@ class MyCar extends CGFobject
 		this.bumper = new CGFappearance(this.scene);
 		this.bumper.setDiffuse(0.3, 0.3, 0.3, 1.0);
 		this.bumper.setShininess(120);
-		this.bumper.loadTexture("../resources/images/bumper.png");
+		this.bumper.loadTexture("../resources/images/car/bumper.png");
 	};
 
 	display()
 	{
-		
-		
-		
+
+
+
 		this.scene.pushMatrix();
 		this.scene.translate(this.x,0,this.z);//tanslation of the car
 		this.scene.rotate(this.rot_car,0,1,0);
 		this.scene.translate(0,0,1.3);
-		
+
 		// Body
 		this.paint.apply();
         this.scene.pushMatrix();
@@ -265,7 +265,7 @@ class MyCar extends CGFobject
 				this.rot_car-=this.curr_rot*time*2;
 			}
 		}
-		
+
 	};
 
 
@@ -285,10 +285,10 @@ class MyCar extends CGFobject
 	rotWheel(time,dir,speed){
 		if(dir<0){
 				this.curr_rot1+=(time*speed);
-		}	
+		}
 		if(dir>0){
 				this.curr_rot1-=(time*speed);
-		}	
+		}
 	};
 	//rotate wheel to the right or to the left
 	rotateWheel(time,rot){
@@ -301,7 +301,7 @@ class MyCar extends CGFobject
 			}
 			if(Math.abs(this.curr_rot)>this.max_rot)
 				this.curr_rot=this.max_rot;
-		}	
+		}
 		if(rot>0){	//case :the user presses D
 			if(Math.abs(this.curr_rot)<this.max_rot || this.curr_rot>0)	//not in the max angle
 				if(this.curr_rot>0)	//case: the wheel is to the left side
@@ -326,5 +326,5 @@ class MyCar extends CGFobject
 				}
 		}
 	};
-	
+
 };
