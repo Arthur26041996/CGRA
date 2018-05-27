@@ -21,8 +21,7 @@ class MyInterface extends CGFinterface {
 		//  http://workshop.chromeexperiments.com/examples/gui
 
 		this.gui = new dat.GUI();
-
-		this.gui.add(this.scene, 'doSomething');	
+	
 		
 		var luz=this.gui.addFolder("Luzes");
 		luz.open();
@@ -38,7 +37,8 @@ class MyInterface extends CGFinterface {
 		// this.speed=3;
 		// min and max values can be specified as parameters
 
-		this.gui.add(this.scene, 'speed', -20, 20);
+		this.gui.add(this.scene, 'speed', -5, 5);
+		this.gui.add(this.scene,'currVehicleAppearance',this.scene.vehicleAppearanceList);
 		this.gui.add(this.scene,'axix');
 		//call initKeys
 		this.initKeys();

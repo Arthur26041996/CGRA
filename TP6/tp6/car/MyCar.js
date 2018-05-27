@@ -9,6 +9,7 @@ class MyCar extends CGFobject
 		super(scene);
 		//variables to move the wheels
 		this.max_rot=Math.PI/4;
+		this.velocity=0;
 		this.curr_rot1=0;	//variable to rotate front and back
 		this.curr_rot=0;	//variable to rotate right or left
 		this.mov=0;			//total to move
@@ -16,6 +17,8 @@ class MyCar extends CGFobject
 		this.x=0;			//position in x
 		this.z=0;			//position in z
 
+		this.vehicleAppearances=[];		//array with the textures
+		
 		this.r=0.6;			//variable radius
 		this.cube = new MyUnitCubeQuad(this.scene);
 		this.trapeze = new MyTrapeze2D(this.scene);
@@ -33,9 +36,23 @@ class MyCar extends CGFobject
 		this.glass.setSpecular(0.5, 0.5, 0.5, 1.0);
 		this.glass.setShininess(0);
 		this.glass.loadTexture("../resources/images/glass.png");
+		//textures for the car
+		this.paint0 = new CGFappearance(this.scene);
+		this.paint0.loadTexture("../resources/images/car/paint/black.png");
+		this.vehicleAppearances.push(this.paint0);
+		this.paint1 = new CGFappearance(this.scene);
+		this.paint1.loadTexture("../resources/images/car/paint/blue.png");
+		this.vehicleAppearances.push(this.paint1);
+		this.paint2 = new CGFappearance(this.scene);
+		this.paint2.loadTexture("../resources/images/car/paint/green.png");
+		this.vehicleAppearances.push(this.paint2);
+		this.paint3 = new CGFappearance(this.scene);
+		this.paint3.loadTexture("../resources/images/car/paint/red.png");
+		this.vehicleAppearances.push(this.paint3);
+		this.paint4 = new CGFappearance(this.scene);
+		this.paint4.loadTexture("../resources/images/car/paint/white.png");
+		this.vehicleAppearances.push(this.paint4);
 
-		this.paint = new CGFappearance(this.scene);
-		this.paint.loadTexture("../resources/images/car/paint/black.png");
 
 		this.frontLights = new CGFappearance(this.scene);
 		this.frontLights.setDiffuse(1.0, 1.0, 0.0, 1.0);
@@ -51,22 +68,43 @@ class MyCar extends CGFobject
 
 	display()
 	{
-
-
-
+		
+		
+		
 		this.scene.pushMatrix();
 		this.scene.translate(this.x,0,this.z);//tanslation of the car
 		this.scene.rotate(this.rot_car,0,1,0);
 		this.scene.translate(0,0,1.3);
-
+		
 		// Body
-		this.paint.apply();
+		this.vehicleAppearances[this.scene.currVehicleAppearance].apply();
         this.scene.pushMatrix();
         this.scene.translate(0, 1.1, 0);
 		this.scene.scale(2.5, 1, 5);
         this.cube.display();
         this.scene.popMatrix();
 
+		this.scene.pushMatrix();
+		this.scene.translate(0, 2.6, 0);
+		this.scene.rotate(-90 * degToRad, 1, 0, 0);
+		this.scene.scale(2.5, 1.5, 1);
+		this.quad.display();
+		this.scene.popMatrix();
+
+		  // Mirros
+        this.scene.pushMatrix();
+        this.scene.translate(1.45, 1.7, 1);
+        this.scene.scale(0.4, 0.3, 0.1);
+        this.cube.display();
+        this.scene.popMatrix();
+
+        this.scene.pushMatrix();
+        this.scene.translate(-1.45, 1.7, 1);
+        this.scene.scale(0.4, 0.3, 0.1);
+        this.cube.display();
+        this.scene.popMatrix();
+
+		//body
 		this.bumper.apply();
 
 		this.scene.pushMatrix();
@@ -119,14 +157,7 @@ class MyCar extends CGFobject
 		this.quad.display();
 		this.scene.popMatrix();
 
-		this.paint.apply();
-
-		this.scene.pushMatrix();
-		this.scene.translate(0, 2.6, 0);
-		this.scene.rotate(-90 * degToRad, 1, 0, 0);
-		this.scene.scale(2.5, 1.5, 1);
-		this.quad.display();
-		this.scene.popMatrix();
+		
 
 
         // Front lights
@@ -189,20 +220,7 @@ class MyCar extends CGFobject
         this.scene.popMatrix();
 
 
-        // Mirros
-		this.paint.apply();
-
-        this.scene.pushMatrix();
-        this.scene.translate(1.45, 1.7, 1);
-        this.scene.scale(0.4, 0.3, 0.1);
-        this.cube.display();
-        this.scene.popMatrix();
-
-        this.scene.pushMatrix();
-        this.scene.translate(-1.45, 1.7, 1);
-        this.scene.scale(0.4, 0.3, 0.1);
-        this.cube.display();
-        this.scene.popMatrix();
+      
 
 		this.default.apply();
 
@@ -245,50 +263,65 @@ class MyCar extends CGFobject
 		this.scene.popMatrix();
 	};
 	update(time,rot,dir,speed){
+		//increase or decrease velocity
+		this.updateVelocity(time,dir,speed);
 		//translate the car
-		this.moveCar(time,dir,speed);
+		this.moveCar(time);
 		//rotate to the right or left
 		this.rotateWheel(time,rot);
 		//rotate backwards or frontwards
-		this.rotWheel(time,dir,speed/this.r);
+		this.rotWheel(time,dir);
 		//rotate the all car
-		this.rotateCar(time,speed,dir);
+		this.rotateCar(time,dir);
 	};
 
-	rotateCar(time,speed,dir){
-		console.log("curr_rot " + this.curr_rot);
-		if(dir!=0){
-			if(dir>0){
-				this.rot_car+=this.curr_rot*time*2;
+	updateVelocity(time,dir,speed){
+		if(dir>0){
+			if(this.velocity<0)	{			//the break is faster than the acceleration
+				this.velocity+=2*time*speed;
+				if(this.velocity>0)
+					this.velocity=0;
 			}
-			if(dir<0){
-				this.rot_car-=this.curr_rot*time*2;
-			}
+			else this.velocity+=time*speed;
 		}
-
-	};
-
-
-	moveCar(time,dir,speed){
 		if(dir<0){
-			this.x-=(speed*time)*Math.sin(this.rot_car);
-			this.z-=(speed*time)*Math.cos(this.rot_car);
+			if(this.velocity>0)	{			//the break is faster than the acceleration
+				this.velocity-=2*time*speed;
+				if(this.velocity<0)
+					this.velocity=0;
+			}
+			else this.velocity-=time*speed;
 		}
-		if(dir>0)
+	};
+
+	rotateCar(time){
+		if(this.velocity>0){
+				this.rot_car+=this.curr_rot*time*2;
+		}
+		if(this.velocity<0){
+				this.rot_car-=this.curr_rot*time*2;
+		}
+		
+	};
+
+
+	moveCar(time){
+		/*if(this.velocity<0){
+			this.x-=(this.velocity*time)*Math.sin(this.rot_car);
+			this.z-=(this.velocity*time)*Math.cos(this.rot_car);
+		}*/
+		if(this.velocity!=0)
 		{
-			this.x+=(speed*time)*Math.sin(this.rot_car);
-			this.z+=(speed*time)*Math.cos(this.rot_car);
+			this.x+=(this.velocity*time)*Math.sin(this.rot_car);
+			this.z+=(this.velocity*time)*Math.cos(this.rot_car);
 		}
 	};
 
 	//rotate backwards or frontwards, speed parameter is in radians per second
-	rotWheel(time,dir,speed){
-		if(dir<0){
-				this.curr_rot1+=(time*speed);
-		}
-		if(dir>0){
-				this.curr_rot1-=(time*speed);
-		}
+	rotWheel(time,dir){
+		if(this.velocity!=0){
+				this.curr_rot1-=(time*this.velocity);
+		}	
 	};
 	//rotate wheel to the right or to the left
 	rotateWheel(time,rot){
@@ -301,7 +334,7 @@ class MyCar extends CGFobject
 			}
 			if(Math.abs(this.curr_rot)>this.max_rot)
 				this.curr_rot=this.max_rot;
-		}
+		}	
 		if(rot>0){	//case :the user presses D
 			if(Math.abs(this.curr_rot)<this.max_rot || this.curr_rot>0)	//not in the max angle
 				if(this.curr_rot>0)	//case: the wheel is to the left side
@@ -326,5 +359,5 @@ class MyCar extends CGFobject
 				}
 		}
 	};
-
+	
 };

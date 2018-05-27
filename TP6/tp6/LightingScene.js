@@ -60,6 +60,8 @@ class LightingScene extends CGFscene
 		this.light3=false;
 		this.light4=true;
 		this.speed=3;
+		this.vehicleAppearanceList={black:0,blue:1,green:2,red:3,white:4};
+		this.currVehicleAppearance=0;
 		this.axix=true;
 
 		// Materials
@@ -71,7 +73,7 @@ class LightingScene extends CGFscene
 
 	initCameras()
 	{
-		this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(30, 30, 30), vec3.fromValues(0, 0, 0));
+		this.camera = new CGFcamera(0.4, 0.1, 500, vec3.fromValues(50, 50, 50), vec3.fromValues(0, 0, 0));
 	};
 
 	initLights()
@@ -203,7 +205,7 @@ class LightingScene extends CGFscene
 		this.checkLights();
 		if(!this.crane.hold){
 			this.car.update(this.delta,this.rot,this.dir,this.speed);
-		}
+		}else this.car.velocity=0;
 		this.crane.update(this.delta, this.car.x + 20, this.car.z);
 	};
 
@@ -271,10 +273,5 @@ class LightingScene extends CGFscene
 			this.lights[4].disable();
 		else
 			this.lights[4].enable();
-	};
-
-	doSomething()
-	{
-		console.log("Doing something...");
 	};
 };
