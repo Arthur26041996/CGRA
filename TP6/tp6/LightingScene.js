@@ -47,7 +47,7 @@ class LightingScene extends CGFscene
 		// Scene elements
 		this.car = new MyCar(this);
 		this.terrain = new MyTerrain(this, 8, altimetry, 0, 30, 0, 30);
-		this.crane = new MyCrane(this);
+		this.crane = new MyCrane(this, -8, 0);
 
 		//Vars to move the car
 		this.rot=0;
@@ -171,10 +171,19 @@ class LightingScene extends CGFscene
 		this.crane.display();
 		this.popMatrix();
 
-		this.pushMatrix();
-		this.translate(20,0,0);
-		this.car.display();
-		this.popMatrix();
+		if(this.crane.hide || this.crane.hold){
+			this.pushMatrix();
+			this.translate(20, 0, 0);
+			if (this.crane.hold) {
+				this.car.x = this.crane.deposit_x - 10 - 20;
+				this.car.z = this.crane.deposit_z - 1;
+				this.car.rot_car = this.crane.maxRotAngle;
+			}
+			if (this.crane.hide) {
+				this.car.display();
+			}
+			this.popMatrix();
+		}
 
 		this.pushMatrix();
 		this.scale(50,2,50);
@@ -193,8 +202,10 @@ class LightingScene extends CGFscene
 		this.lastTime=currTime;
 		this.checkKeys(this.delta);
 		this.checkLights();
-		this.car.update(this.delta,this.rot,this.dir,this.speed);
-		this.crane.update(this.delta, 3, 16);
+		if(!this.crane.hold){
+			this.car.update(this.delta,this.rot,this.dir,this.speed);
+		}
+		this.crane.update(this.delta, this.car.x + 20, this.car.z);
 	};
 
 	checkKeys(time)
@@ -204,14 +215,14 @@ class LightingScene extends CGFscene
 		if (this.gui.isKeyPressed("KeyW"))
 		{
 			text+=" W ";
-			this.x+=(this.speed*time);
+			// this.x+=(this.speed*time);
 			this.dir=1;
 			keysPressed=true;
 		}
 		if (this.gui.isKeyPressed("KeyS"))
 		{
 			text+=" S ";
-			this.x-=(this.speed*time);
+			// this.x-=(this.speed*time);
 			if(this.dir==1)
 				this.dir=0;
 			else this.dir=-1;
