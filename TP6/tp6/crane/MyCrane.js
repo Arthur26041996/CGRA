@@ -91,8 +91,8 @@ class MyCrane extends CGFobject
     {
 		// Crane
 		this.scene.pushMatrix();
-		this.scene.rotate(-130 * degToRad, 0, 1, 0);
-		this.scene.rotate(this.currRotAngle, 0, 1, 0);
+		this.scene.rotate(-130 * degToRad, 0, 1, 0);	// initial position is deposit zone
+		this.scene.rotate(this.currRotAngle, 0, 1, 0);	// rotation between zones
 
         // Base
         this.scene.pushMatrix();
@@ -120,8 +120,8 @@ class MyCrane extends CGFobject
         this.scene.popMatrix();
 
 		this.scene.pushMatrix();
-		this.scene.rotate(this.currLiftAngle, 1, 0, 0);
-		this.scene.translate(0, this.articulation_y, this.articulation_z)
+		this.scene.rotate(this.currLiftAngle, 1, 0, 0);							// Top arm rotation up & down
+		this.scene.translate(0, this.articulation_y, this.articulation_z);		// preventing articulation from rotating with the arm
 
         // Articulation
         this.scene.pushMatrix();
@@ -153,7 +153,7 @@ class MyCrane extends CGFobject
 		this.scene.popMatrix();
 
 		this.scene.pushMatrix();
-		this.scene.translate(0, this.rope_y, this.rope_z);
+		this.scene.translate(0, this.rope_y, this.rope_z);		// Moving the rope acording to arm rotation
 
         // Rope
         this.scene.pushMatrix();
@@ -182,6 +182,7 @@ class MyCrane extends CGFobject
         this.imanCover.display();
         this.scene.popMatrix();
 
+		// car "held" by the iman
 		if(!this.hide){
 			this.scene.pushMatrix();
 			this.scene.translate(this.pickup_x+1.5, 3.9, this.pickup_z+1);
@@ -213,6 +214,14 @@ class MyCrane extends CGFobject
 
     };
 
+	/**
+	* Verify if the car is inside the pickup zone and triggers the corresponding actions
+	*
+	* @param time current time
+	* @param carX car X value
+	* @param carZ car Z value
+	* @return void
+	*/
 	update(time, carX, carZ){
 		if(!this.hold && (carX <= this.pickup_x + this.init_x/2) && (carX >= this.pickup_x + this.init_x/2 - this.pickup_dx)){
 			if (carZ <= (this.pickup_z + this.init_z + this.pickup_dz/2) && carZ >= (this.pickup_z + this.init_z - this.pickup_dz/2)) {
@@ -243,6 +252,13 @@ class MyCrane extends CGFobject
 
 	}
 
+	/**
+	* rotate crane between zones
+	*
+	* @param timme current time
+	* @param direction direction of the movemente (1 -> from deposit to pickup zone | 0 -> from pickup to deposit zone)
+	* @return void
+	*/
     rotate(time, direction){
 		let angle = time * this.rotAngle;
 		if (direction != 0) {
@@ -267,6 +283,14 @@ class MyCrane extends CGFobject
 		}
     }
 
+
+	/**
+	* lift crane's arm
+	*
+	* @param time current time
+	* @param direction direction of the movemente (1 -> down | 0 -> up)
+	* @return void
+	*/
     lift(time, direction){
         let angle = time * this.liftAngle;
 		if(direction != 0){

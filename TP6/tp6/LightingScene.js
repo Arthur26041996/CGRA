@@ -65,8 +65,7 @@ class LightingScene extends CGFscene
 		// Materials
 		this.materialDefault = new CGFappearance(this);
 
-
-		// Textures
+		// Update period
 		this.setUpdatePeriod(10);
 	};
 

@@ -6,7 +6,7 @@ class Plane extends CGFobject{
 	{
 		super(scene);
 
-		// nrDivs = 1 if not provided
+		// nrDivs = 8 if not provided
 		nrDivs = typeof nrDivs !== 'undefined' ? nrDivs : 8;
 
 		// set altimetry if not provided
