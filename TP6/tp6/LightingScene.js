@@ -53,6 +53,8 @@ class LightingScene extends CGFscene
 		this.rot=0;
 		this.dir=0;
 
+		this.fps=60;
+
 		//GUI
 		this.light0=true;
 		this.light1=false;
@@ -68,7 +70,7 @@ class LightingScene extends CGFscene
 		this.materialDefault = new CGFappearance(this);
 
 		// Update period
-		this.setUpdatePeriod(10);
+		this.setUpdatePeriod(1000/this.fps);
 	};
 
 	initCameras()
